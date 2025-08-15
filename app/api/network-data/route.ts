@@ -61,7 +61,7 @@ export async function GET(request: Request) {
           28,
           (Math.log(parseFloat(c.total_expenditure) || 1000) /
             Math.log(100000)) *
-          20,
+            20,
         ),
       ),
       totalExpenditure: parseFloat(c.total_expenditure || 0),
@@ -107,8 +107,8 @@ export async function GET(request: Request) {
             Math.min(
               36,
               companyCount * 0.5 +
-              (Math.log(stats.totalExpenditure || 1) / Math.log(10000)) * 5 +
-              8,
+                (Math.log(stats.totalExpenditure || 1) / Math.log(10000)) * 5 +
+                8,
             ),
           ),
           billNumber: billNumber,

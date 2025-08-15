@@ -319,7 +319,7 @@ export default function ForceDirectedGraph() {
         try {
           const parsed = JSON.parse(value);
           if (Array.isArray(parsed)) return parsed.filter(Boolean);
-        } catch (e) { }
+        } catch (e) {}
         const split = value
           .split(/\n|\r|\u2022|\-|;|\•/)
           .map((s) => s.trim())
@@ -572,23 +572,23 @@ export default function ForceDirectedGraph() {
             connectedBills={
               displayData
                 ? (displayData.edges
-                  .filter((e): e is Link => {
-                    if (!e.source) return false;
-                    const sourceId =
-                      typeof e.source === "object"
-                        ? (e.source as Node).id
-                        : e.source;
-                    return sourceId === selectedCompanyNode.id;
-                  })
-                  .map((e) => {
-                    if (!e.target) return null;
-                    const targetId =
-                      typeof e.target === "object"
-                        ? (e.target as Node).id
-                        : e.target;
-                    return displayData.nodes.find((n) => n.id === targetId);
-                  })
-                  .filter(Boolean) as Node[])
+                    .filter((e): e is Link => {
+                      if (!e.source) return false;
+                      const sourceId =
+                        typeof e.source === "object"
+                          ? (e.source as Node).id
+                          : e.source;
+                      return sourceId === selectedCompanyNode.id;
+                    })
+                    .map((e) => {
+                      if (!e.target) return null;
+                      const targetId =
+                        typeof e.target === "object"
+                          ? (e.target as Node).id
+                          : e.target;
+                      return displayData.nodes.find((n) => n.id === targetId);
+                    })
+                    .filter(Boolean) as Node[])
                 : []
             }
             onClose={handleClearCompanySelection}
