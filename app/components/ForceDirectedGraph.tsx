@@ -69,6 +69,7 @@ export default function ForceDirectedGraph() {
   const [minCompanyCount, setMinCompanyCount] = useState<number>(30);
   const [fringeCompanyThreshold, setFringeCompanyThreshold] =
     useState<number>(500000);
+
   const [selectedBill, setSelectedBill] = useState<Node | null>(null);
   const [selectedCompanyNode, setSelectedCompanyNode] = useState<Node | null>(
     null,
@@ -77,6 +78,30 @@ export default function ForceDirectedGraph() {
   const [viewMode, setViewMode] = useState<
     "default" | "bill-focus" | "company-focus"
   >("default");
+
+  const handleMinCompanyCountChange = useCallback((value: number) => {
+    setMinCompanyCount(value);
+  }, []);
+
+  const handleFringeCompanyThresholdChange = useCallback((value: number) => {
+    setFringeCompanyThreshold(value);
+  }, []);
+
+  const [searchResetDone, setSearchResetDone] = useState(false);
+
+  useEffect(() => {
+    const hasSearchQuery = companyQuery.trim() !== "";
+
+    if (hasSearchQuery && !searchResetDone) {
+      setMinCompanyCount(1);
+      setFringeCompanyThreshold(0);
+      setSearchResetDone(true);
+    } else if (!hasSearchQuery) {
+      setMinCompanyCount(30);
+      setFringeCompanyThreshold(500000);
+      setSearchResetDone(false);
+    }
+  }, [companyQuery, searchResetDone]);
 
   const getTopNodesData = useCallback(
     (sourceData: BillFocusedData, dollarLimit: number): BillFocusedData => {
@@ -218,27 +243,27 @@ export default function ForceDirectedGraph() {
     }
 
     const query = companyQuery.trim().toLowerCase();
-    const noFilters = query === "";
     const hasSearchQuery = query !== "";
 
     let workingData = { ...data };
 
-    // If there's a search query, skip other filters and show all search results
     if (hasSearchQuery) {
       const matchesSearch = (edge: any) => {
         const companyName = String(edge.company || "").toLowerCase();
         const sector = String(edge.sector || "").toLowerCase();
+        const subcategory = String(edge.subcategory || "").toLowerCase();
         const billId = String(edge.bill || "").toLowerCase();
 
         return (
           companyName.includes(query) ||
           sector.includes(query) ||
+          subcategory.includes(query) ||
           billId.includes(query)
         );
       };
 
       const toId = (v: any) => (typeof v === "object" ? v.id : v);
-      const filteredEdges = data.edges
+      let searchFilteredEdges = data.edges
         .filter((e: any) => matchesSearch(e))
         .map((e: any) => ({
           ...e,
@@ -247,18 +272,74 @@ export default function ForceDirectedGraph() {
         }));
 
       const nodeIdSet = new Set<string>();
-      filteredEdges.forEach((e: any) => {
+      searchFilteredEdges.forEach((e: any) => {
         if (e.source) nodeIdSet.add(String(e.source));
         if (e.target) nodeIdSet.add(String(e.target));
       });
 
-      const filteredNodes = data.nodes.filter((n: any) =>
+      let searchFilteredNodes = data.nodes.filter((n: any) =>
         nodeIdSet.has(String(n.id)),
       );
 
+      if (minCompanyCount > 1) {
+        const validBills = searchFilteredNodes.filter(
+          (n) => n.type === "bill" && (n.companyCount || 0) >= minCompanyCount,
+        );
+        const validBillIds = new Set(validBills.map((n) => n.id));
+
+        const validEdges = searchFilteredEdges.filter((e) => {
+          const targetId =
+            typeof e.target === "object" ? (e.target as any).id : e.target;
+          return validBillIds.has(targetId);
+        });
+
+        const connectedCompanyIds = new Set(
+          validEdges.map((e) =>
+            typeof e.source === "object" ? (e.source as any).id : e.source,
+          ),
+        );
+        const validCompanies = searchFilteredNodes.filter(
+          (n) => n.type === "company" && connectedCompanyIds.has(n.id),
+        );
+
+        searchFilteredNodes = [...validBills, ...validCompanies];
+        searchFilteredEdges = validEdges;
+      }
+
+      if (fringeCompanyThreshold > 0) {
+        const significantCompanies = searchFilteredNodes.filter((n) => {
+          if (n.type !== "company") return true;
+          const expenditure = n.totalExpenditure || n.expenditure || 0;
+          return expenditure >= fringeCompanyThreshold;
+        });
+
+        const significantCompanyIds = new Set(
+          significantCompanies.map((n) => n.id),
+        );
+        const significantEdges = searchFilteredEdges.filter((e) => {
+          const sourceId =
+            typeof e.source === "object" && e.source
+              ? (e.source as any).id
+              : e.source;
+          const targetId =
+            typeof e.target === "object" && e.target
+              ? (e.target as any).id
+              : e.target;
+          return (
+            sourceId &&
+            targetId &&
+            significantCompanyIds.has(sourceId) &&
+            significantCompanyIds.has(targetId)
+          );
+        });
+
+        searchFilteredNodes = significantCompanies;
+        searchFilteredEdges = significantEdges;
+      }
+
       return {
-        nodes: filteredNodes,
-        edges: filteredEdges,
+        nodes: searchFilteredNodes,
+        edges: searchFilteredEdges,
         bills: data.bills,
         metadata: data.metadata,
       } as BillFocusedData;
@@ -292,8 +373,7 @@ export default function ForceDirectedGraph() {
       };
     }
 
-    // Filter out fringe companies in default view to reduce clutter
-    if (noFilters && !selectedCompany && viewMode === "default") {
+    if (!hasSearchQuery && !selectedCompany && viewMode === "default") {
       const significantCompanies = workingData.nodes.filter((n) => {
         if (n.type !== "company") return true;
         const expenditure = n.totalExpenditure || n.expenditure || 0;
@@ -327,7 +407,7 @@ export default function ForceDirectedGraph() {
       };
     }
 
-    if (noFilters && !selectedCompany) {
+    if (!hasSearchQuery && !selectedCompany) {
       if (showOnlyTopNodes) {
         return getTopNodesData(workingData, dollarLimit);
       } else {
@@ -335,7 +415,6 @@ export default function ForceDirectedGraph() {
       }
     }
 
-    // Handle company filtering only (no search query)
     const toId = (v: any) => (typeof v === "object" ? v.id : v);
 
     let filteredEdges: any[];
@@ -348,7 +427,6 @@ export default function ForceDirectedGraph() {
           target: toId(e.target),
         }));
     } else {
-      // Show all edges when no company is selected
       filteredEdges = data.edges.map((e: any) => ({
         ...e,
         source: toId(e.source),
@@ -546,7 +624,6 @@ export default function ForceDirectedGraph() {
       }
     }
 
-    // Set intelligent default for fringe company threshold
     if (data && maxExpenditure > 0 && fringeCompanyThreshold === 500000) {
       const suggestedFringeThreshold = Math.max(100000, maxExpenditure * 0.05);
       setFringeCompanyThreshold(suggestedFringeThreshold);
@@ -627,21 +704,19 @@ export default function ForceDirectedGraph() {
     }
   };
 
+
+
   const filterOverlayProps = {
     companyQuery,
     onCompanyQueryChange: setCompanyQuery,
-    dollarLimit,
-    onDollarLimitChange: setDollarLimit,
-    showOnlyTopNodes,
-    onShowOnlyTopNodesChange: setShowOnlyTopNodes,
     totalNodes: data?.nodes.length,
     displayedNodes: displayData?.nodes.length,
     maxExpenditure,
     minCompanyCount,
-    onMinCompanyCountChange: setMinCompanyCount,
+    onMinCompanyCountChange: handleMinCompanyCountChange,
     maxCompanyCount,
     fringeCompanyThreshold,
-    onFringeCompanyThresholdChange: setFringeCompanyThreshold,
+    onFringeCompanyThresholdChange: handleFringeCompanyThresholdChange,
   };
 
   if (loading) {

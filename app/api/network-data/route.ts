@@ -61,7 +61,7 @@ export async function GET(request: Request) {
           28,
           (Math.log(parseFloat(c.total_expenditure) || 1000) /
             Math.log(100000)) *
-            20,
+          20,
         ),
       ),
       totalExpenditure: parseFloat(c.total_expenditure || 0),
@@ -107,8 +107,8 @@ export async function GET(request: Request) {
             Math.min(
               36,
               companyCount * 0.5 +
-                (Math.log(stats.totalExpenditure || 1) / Math.log(10000)) * 5 +
-                8,
+              (Math.log(stats.totalExpenditure || 1) / Math.log(10000)) * 5 +
+              8,
             ),
           ),
           billNumber: billNumber,
@@ -132,13 +132,14 @@ export async function GET(request: Request) {
       const billIndex = billNumberToIndex.get(conn.bill_number);
 
       if (companyIndex !== undefined && billIndex !== undefined) {
+        const company = filteredCompanies[companyIndex];
         edges.push({
           source: `company-${companyIndex}`,
           target: `bill-${billIndex}`,
           value: parseFloat(conn.expenditure || 0),
           type: "company-bill",
-          sector: conn.sector,
-          subcategory: conn.subcategory,
+          sector: company.sector,
+          subcategory: company.subcategory,
           company: conn.company_name,
           bill: conn.bill_number,
           expenditure: parseFloat(conn.expenditure || 0),

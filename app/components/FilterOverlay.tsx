@@ -3,10 +3,6 @@ import styles from "./ForceDirectedGraph.module.css";
 interface FilterOverlayProps {
   companyQuery: string;
   onCompanyQueryChange: (value: string) => void;
-  dollarLimit: number;
-  onDollarLimitChange: (value: number) => void;
-  showOnlyTopNodes: boolean;
-  onShowOnlyTopNodesChange: (value: boolean) => void;
   totalNodes?: number;
   displayedNodes?: number;
   maxExpenditure?: number;
@@ -21,10 +17,6 @@ export default function FilterOverlay(props: FilterOverlayProps) {
   const {
     companyQuery,
     onCompanyQueryChange,
-    dollarLimit,
-    onDollarLimitChange,
-    showOnlyTopNodes,
-    onShowOnlyTopNodesChange,
     totalNodes,
     displayedNodes,
     maxExpenditure,
@@ -98,68 +90,29 @@ export default function FilterOverlay(props: FilterOverlayProps) {
           or less
         </div>
       </div>
-      <div className={styles.controls}>
-        <label className={styles.checkboxLabel}>
-          <input
-            type="checkbox"
-            checked={showOnlyTopNodes}
-            onChange={(e) => onShowOnlyTopNodesChange(e.target.checked)}
-            className={styles.checkbox}
-          />
-          Filter by company spending
-        </label>
-      </div>
-      {showOnlyTopNodes && (
-        <div className={styles.controls}>
-          <label className={styles.sliderLabel}>
-            <strong>Minimum company spending:</strong>{" "}
-            {dollarLimit >= 1000000
-              ? `$${(dollarLimit / 1000000).toFixed(1)}M`
-              : dollarLimit >= 1000
-                ? `$${(dollarLimit / 1000).toFixed(0)}K`
-                : `$${dollarLimit.toLocaleString()}`}
-          </label>
-          <input
-            type="range"
-            min="10000"
-            max={maxExpenditure || 10000000}
-            step={Math.max(
-              10000,
-              Math.floor((maxExpenditure || 10000000) / 100),
-            )}
-            value={Math.min(dollarLimit, maxExpenditure || 10000000)}
-            onChange={(e) => onDollarLimitChange(parseInt(e.target.value))}
-            className={styles.slider}
-          />
-        </div>
-      )}
-      {totalNodes && displayedNodes && (
+
+      {totalNodes && (
         <div className={styles.nodeCount}>
-          Showing {displayedNodes} of {totalNodes} nodes
-          {showOnlyTopNodes && (
-            <div>
-              (company spending ≥{" "}
-              {dollarLimit >= 1000000
-                ? `$${(dollarLimit / 1000000).toFixed(1)}M`
-                : dollarLimit >= 1000
-                  ? `$${(dollarLimit / 1000).toFixed(0)}K`
-                  : `$${dollarLimit.toLocaleString()}`}
-              )
-            </div>
-          )}
-          {minCompanyCount > 1 && (
-            <div>(bills with {minCompanyCount}+ companies)</div>
-          )}
-          {fringeCompanyThreshold > 0 && (
-            <div>
-              (hiding companies spending ≤{" "}
-              {fringeCompanyThreshold >= 1000000
-                ? `$${(fringeCompanyThreshold / 1000000).toFixed(1)}M`
-                : fringeCompanyThreshold >= 1000
-                  ? `$${(fringeCompanyThreshold / 1000).toFixed(0)}K`
-                  : `$${fringeCompanyThreshold.toLocaleString()}`}
-              )
-            </div>
+          {displayedNodes === 0 ? (
+            "No nodes found"
+          ) : (
+            <>
+              Showing {displayedNodes} of {totalNodes} nodes
+              {minCompanyCount > 1 && (
+                <div>(bills with {minCompanyCount}+ companies)</div>
+              )}
+              {fringeCompanyThreshold > 0 && (
+                <div>
+                  (hiding companies spending ≤{" "}
+                  {fringeCompanyThreshold >= 1000000
+                    ? `$${(fringeCompanyThreshold / 1000000).toFixed(1)}M`
+                    : fringeCompanyThreshold >= 1000
+                      ? `$${(fringeCompanyThreshold / 1000).toFixed(0)}K`
+                      : `$${fringeCompanyThreshold.toLocaleString()}`}
+                  )
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

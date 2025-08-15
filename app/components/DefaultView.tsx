@@ -299,7 +299,6 @@ export default function DefaultView({
           const name = d.label || "";
 
           if (name.length > 16) {
-            // Split long names into maximum 2 lines
             const words = name.split(" ");
             const lines = [];
             let currentLine = "";
@@ -314,13 +313,11 @@ export default function DefaultView({
             }
             if (currentLine) lines.push(currentLine);
 
-            // Limit to maximum 2 lines
             if (lines.length > 2) {
               lines[1] = lines[1].substring(0, 11) + "...";
               lines.splice(2);
             }
 
-            // Remove existing text and add multi-line text
             text.text(null);
             lines.forEach((line, i) => {
               text

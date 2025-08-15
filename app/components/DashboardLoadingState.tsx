@@ -7,7 +7,7 @@ export default function DashboardLoadingState() {
         <div className={styles.fullscreen}>
             <div className={styles.loading}>
                 <div className={styles.loadingCard}>
-                    <h2 className={styles.loadingTitle}>Loading Dashboard...</h2>
+                    <h2 className={styles.loadingTitle}>Loading Visualization...</h2>
                     <p className={styles.loadingDescription}>
                         This visualization displays California Lobbyist Employer lobbying expenditures
                         from the 2025-2026 session by bill.
