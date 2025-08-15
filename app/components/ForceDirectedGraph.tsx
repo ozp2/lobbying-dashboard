@@ -62,12 +62,11 @@ export default function ForceDirectedGraph() {
   const [data, setData] = useState<BillFocusedData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedSector, setSelectedSector] = useState<string>("All");
   const [companyQuery, setCompanyQuery] = useState<string>("");
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const [dollarLimit, setDollarLimit] = useState<number>(2000000);
   const [showOnlyTopNodes, setShowOnlyTopNodes] = useState<boolean>(false);
-  const [minCompanyCount, setMinCompanyCount] = useState<number>(10);
+  const [minCompanyCount, setMinCompanyCount] = useState<number>(30);
   const [fringeCompanyThreshold, setFringeCompanyThreshold] =
     useState<number>(500000);
   const [selectedBill, setSelectedBill] = useState<Node | null>(null);
@@ -219,8 +218,7 @@ export default function ForceDirectedGraph() {
     }
 
     const query = companyQuery.trim().toLowerCase();
-    const isAllSectors = selectedSector === "All";
-    const noFilters = isAllSectors && query === "";
+    const noFilters = query === "";
     const hasSearchQuery = query !== "";
 
     let workingData = { ...data };
@@ -337,9 +335,7 @@ export default function ForceDirectedGraph() {
       }
     }
 
-    // Handle sector filtering only (no search query)
-    const matchesSector = (sector: string) =>
-      isAllSectors || sector === selectedSector;
+    // Handle company filtering only (no search query)
     const toId = (v: any) => (typeof v === "object" ? v.id : v);
 
     let filteredEdges: any[];
@@ -352,13 +348,12 @@ export default function ForceDirectedGraph() {
           target: toId(e.target),
         }));
     } else {
-      filteredEdges = data.edges
-        .filter((e: any) => matchesSector(e.sector))
-        .map((e: any) => ({
-          ...e,
-          source: toId(e.source),
-          target: toId(e.target),
-        }));
+      // Show all edges when no company is selected
+      filteredEdges = data.edges.map((e: any) => ({
+        ...e,
+        source: toId(e.source),
+        target: toId(e.target),
+      }));
     }
 
     const nodeIdSet = new Set<string>();
@@ -385,7 +380,6 @@ export default function ForceDirectedGraph() {
     return result;
   }, [
     data,
-    selectedSector,
     companyQuery,
     selectedCompany,
     dollarLimit,
@@ -514,22 +508,17 @@ export default function ForceDirectedGraph() {
     loadData();
   }, []);
 
-  const { sectors, maxCompanyCount } = useMemo(() => {
-    if (!data) return { sectors: [], maxCompanyCount: 1 };
+  const { maxCompanyCount } = useMemo(() => {
+    if (!data) return { maxCompanyCount: 1 };
 
-    const companyNodes = data.nodes.filter((n: any) => n.type === "company");
     const billNodes = data.nodes.filter((n: any) => n.type === "bill");
-
-    const sectors = Array.from(
-      new Set(companyNodes.map((c: any) => c.sector).filter(Boolean)),
-    ).sort();
 
     const maxCount = Math.max(
       ...billNodes.map((b: any) => b.companyCount || 0),
       1,
     );
 
-    return { sectors, maxCompanyCount: maxCount };
+    return { maxCompanyCount: maxCount };
   }, [data]);
 
   const maxExpenditure = useMemo(() => {
