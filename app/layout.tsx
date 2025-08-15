@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { nunitoSans, anonymousPro } from "./fonts";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: "California Lobbying Expenditures",
@@ -18,7 +19,10 @@ export default function RootLayout({
       lang="en"
       className={`${nunitoSans.variable} ${anonymousPro.variable}`}
     >
-      <body className={nunitoSans.className}>{children}</body>
+      <body className={nunitoSans.className}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
