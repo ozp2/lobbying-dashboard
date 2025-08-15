@@ -136,6 +136,7 @@
 .subtitle {
   font-size: var(--small-font-size);
   font-family: var(--standard-font-family);
+  line-height: 1.3;
   color: var(--secondary-text);
   margin-top: var(--mini-gap);
 }

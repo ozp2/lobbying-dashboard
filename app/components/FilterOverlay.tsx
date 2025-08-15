@@ -39,8 +39,7 @@ export default function FilterOverlay(props: FilterOverlayProps) {
     <div className={styles.overlay}>
       <div className={styles.title}>California State Lobbying Expenditures</div>
       <div className={styles.subtitle}>
-        Per bill, by company & sector in the 2025–2026 legislative session.
-      </div>
+        Lobbying expenditures and company connections by bill in the 2025–2026 legislative session</div>
       <div className={styles.controls}>
         <input
           id="company-search"
