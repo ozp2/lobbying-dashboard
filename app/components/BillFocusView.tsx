@@ -152,8 +152,9 @@ export default function BillFocusView({
           n.fx = width / 2;
           n.fy = height / 2;
         } else if (n.type === "company") {
-          const angle = (i * 2 * Math.PI) / (data.nodes.length - 1);
-          const radius = Math.min(width, height) * 0.4;
+          const companyIndex = data.nodes.filter(node => node.type === "company").findIndex(node => node.id === n.id);
+          const angle = (companyIndex * 2 * Math.PI) / data.nodes.filter(node => node.type === "company").length;
+          const radius = Math.min(width, height) * 0.9;
           n.x = width / 2 + Math.cos(angle) * radius;
           n.y = height / 2 + Math.sin(angle) * radius;
         }
@@ -163,7 +164,7 @@ export default function BillFocusView({
 
         if (!n.x && !n.y) {
           const gridSize = Math.ceil(Math.sqrt(data.nodes.length));
-          const cellSize = (Math.max(width, height) * 3.5) / gridSize;
+          const cellSize = (Math.max(width, height) * 6.0) / gridSize;
           const row = Math.floor(i / gridSize);
           const col = i % gridSize;
           const centerX = width / 2;
@@ -171,11 +172,11 @@ export default function BillFocusView({
           n.x =
             centerX +
             (col - gridSize / 2 + 0.5) * cellSize +
-            (Math.random() - 0.5) * 400;
+            (Math.random() - 0.5) * 600;
           n.y =
             centerY +
             (row - gridSize / 2 + 0.5) * cellSize +
-            (Math.random() - 0.5) * 400;
+            (Math.random() - 0.5) * 600;
         }
       }
     });
@@ -191,30 +192,30 @@ export default function BillFocusView({
         d3
           .forceLink(data.edges)
           .id((d: any) => d.id)
-          .distance(isIsolationMode ? 150 : 600)
-          .strength(isIsolationMode ? 0.3 : 0.005),
+          .distance(isIsolationMode ? 250 : 350)
+          .strength(isIsolationMode ? 0.3 : 0.15),
       )
       .force(
         "charge",
         d3
           .forceManyBody()
-          .strength(isIsolationMode ? -300 : -3000)
-          .distanceMax(isIsolationMode ? 200 : 1500)
+          .strength(isIsolationMode ? -500 : -1200)
+          .distanceMax(isIsolationMode ? 200 : 600)
           .theta(0.8),
       )
       .force(
         "center",
         isIsolationMode
           ? null
-          : d3.forceCenter(width / 2, height / 2).strength(0.02),
+          : d3.forceCenter(width / 2, height / 2).strength(0.005),
       )
       .force(
         "collision",
         d3
           .forceCollide()
-          .radius((d: any) => nodeRadius(d) + (isIsolationMode ? 10 : 80))
-          .strength(0.7)
-          .iterations(2),
+          .radius((d: any) => nodeRadius(d) + (isIsolationMode ? 40 : 100))
+          .strength(0.9)
+          .iterations(3),
       );
 
     const edges = g
@@ -312,7 +313,7 @@ export default function BillFocusView({
           return match ? match[1] : billNum.split(" ")[0];
         }
         const name = d.label || "";
-        return name.length > 8 ? name.substring(0, 6) + "..." : name;
+        return name.length > 20 ? name.substring(0, 18) + "..." : name;
       })
       .attr("text-anchor", "middle")
       .attr("dy", (d: any) => {

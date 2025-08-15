@@ -206,8 +206,51 @@ export default function ForceDirectedGraph() {
     const query = companyQuery.trim().toLowerCase();
     const isAllSectors = selectedSector === "All";
     const noFilters = isAllSectors && query === "";
+    const hasSearchQuery = query !== "";
 
     let workingData = { ...data };
+
+    // If there's a search query, skip other filters and show all search results
+    if (hasSearchQuery) {
+      const matchesSearch = (edge: any) => {
+        const companyName = String(edge.company || "").toLowerCase();
+        const sector = String(edge.sector || "").toLowerCase();
+        const billId = String(edge.bill || "").toLowerCase();
+
+        return (
+          companyName.includes(query) ||
+          sector.includes(query) ||
+          billId.includes(query)
+        );
+      };
+
+      const toId = (v: any) => (typeof v === "object" ? v.id : v);
+      const filteredEdges = data.edges
+        .filter((e: any) => matchesSearch(e))
+        .map((e: any) => ({
+          ...e,
+          source: toId(e.source),
+          target: toId(e.target),
+        }));
+
+      const nodeIdSet = new Set<string>();
+      filteredEdges.forEach((e: any) => {
+        if (e.source) nodeIdSet.add(String(e.source));
+        if (e.target) nodeIdSet.add(String(e.target));
+      });
+
+      const filteredNodes = data.nodes.filter((n: any) =>
+        nodeIdSet.has(String(n.id)),
+      );
+
+      return {
+        nodes: filteredNodes,
+        edges: filteredEdges,
+        bills: data.bills,
+        metadata: data.metadata,
+      } as BillFocusedData;
+    }
+
     if (minCompanyCount > 1) {
       const validBills = data.nodes.filter(
         (n) => n.type === "bill" && (n.companyCount || 0) >= minCompanyCount,
@@ -266,21 +309,9 @@ export default function ForceDirectedGraph() {
       }
     }
 
+    // Handle sector filtering only (no search query)
     const matchesSector = (sector: string) =>
       isAllSectors || sector === selectedSector;
-    const matchesSearch = (edge: any) => {
-      if (query === "") return true;
-
-      const companyName = String(edge.company || "").toLowerCase();
-      const sector = String(edge.sector || "").toLowerCase();
-      const billId = String(edge.bill || "").toLowerCase();
-
-      return (
-        companyName.includes(query) ||
-        sector.includes(query) ||
-        billId.includes(query)
-      );
-    };
     const toId = (v: any) => (typeof v === "object" ? v.id : v);
 
     let filteredEdges: any[];
@@ -294,7 +325,7 @@ export default function ForceDirectedGraph() {
         }));
     } else {
       filteredEdges = data.edges
-        .filter((e: any) => matchesSector(e.sector) && matchesSearch(e))
+        .filter((e: any) => matchesSector(e.sector))
         .map((e: any) => ({
           ...e,
           source: toId(e.source),
@@ -660,6 +691,7 @@ export default function ForceDirectedGraph() {
       </div>
       {viewMode === "bill-focus" ? (
         <BillFocusView
+          key={`bill-${selectedBill?.id}-${displayData?.nodes.length}`}
           data={displayData}
           selectedBill={selectedBill}
           isIsolationMode={isIsolationMode}
@@ -671,6 +703,7 @@ export default function ForceDirectedGraph() {
         />
       ) : viewMode === "company-focus" ? (
         <CompanyFocusView
+          key={`company-${selectedCompanyNode?.id}-${displayData?.nodes.length}`}
           data={displayData}
           selectedCompanyNode={selectedCompanyNode}
           onCompanyClick={handleCompanyClick}
@@ -680,6 +713,7 @@ export default function ForceDirectedGraph() {
         />
       ) : (
         <DefaultView
+          key={`default-${displayData?.nodes.length}-${fringeCompanyThreshold}`}
           data={displayData}
           onBillClick={handleBillClick}
           onCompanyClick={handleCompanyClick}

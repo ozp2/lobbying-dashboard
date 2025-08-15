@@ -147,7 +147,7 @@ export default function CompanyFocusView({
         n.fy = height / 2;
       } else if (n.type === "bill") {
         const angle = (i * 2 * Math.PI) / connectedBills.length;
-        const radius = Math.min(width, height) * 0.6;
+        const radius = Math.min(width, height) * 0.8;
         n.x = width / 2 + Math.cos(angle) * radius;
         n.y = height / 2 + Math.sin(angle) * radius;
       }
@@ -163,20 +163,20 @@ export default function CompanyFocusView({
         d3
           .forceLink(focusedEdges)
           .id((d: any) => d.id)
-          .distance(150)
-          .strength(0.2),
+          .distance(200)
+          .strength(0.15),
       )
       .force(
         "charge",
-        d3.forceManyBody().strength(-500).distanceMax(400).theta(0.8),
+        d3.forceManyBody().strength(-800).distanceMax(600).theta(0.8),
       )
       .force(
         "collision",
         d3
           .forceCollide()
-          .radius((d: any) => nodeRadius(d) + 8)
-          .strength(0.7)
-          .iterations(2),
+          .radius((d: any) => nodeRadius(d) + 20)
+          .strength(0.9)
+          .iterations(3),
       );
 
     const edges = g
@@ -270,7 +270,7 @@ export default function CompanyFocusView({
       .text((d: any) => {
         if (d.type === "company") {
           const name = d.label || "";
-          return name.length > 15 ? name.substring(0, 13) + "..." : name;
+          return name.length > 25 ? name.substring(0, 23) + "..." : name;
         }
         const billNum = d.billNumber || d.label;
         const match = billNum.match(/([A-Z]{1,3}[\\-\\s]?\\d{1,5})/);

@@ -274,7 +274,7 @@ export default function DefaultView({
           return match ? match[1] : billNum.split(" ")[0];
         }
         const name = d.label || "";
-        return name.length > 8 ? name.substring(0, 6) + "..." : name;
+        return name.length > 16 ? name.substring(0, 14) + "..." : name;
       })
       .attr("text-anchor", "middle")
       .attr("dy", (d: any) => {
@@ -292,7 +292,46 @@ export default function DefaultView({
       .attr("font-weight", (d: any) => (d.type === "bill" ? "600" : "400"))
       .attr("pointer-events", "none")
       .style("text-shadow", "0 1px 3px rgba(255,255,255,0.9)")
-      .attr("font-family", "var(--standard-font-family)");
+      .attr("font-family", "var(--standard-font-family)")
+      .each(function (d: any) {
+        if (d.type === "company") {
+          const text = d3.select(this);
+          const name = d.label || "";
+
+          if (name.length > 16) {
+            // Split long names into maximum 2 lines
+            const words = name.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            for (const word of words) {
+              if ((currentLine + word).length <= 14) {
+                currentLine += (currentLine ? ' ' : '') + word;
+              } else {
+                if (currentLine) lines.push(currentLine);
+                currentLine = word;
+              }
+            }
+            if (currentLine) lines.push(currentLine);
+
+            // Limit to maximum 2 lines
+            if (lines.length > 2) {
+              lines[1] = lines[1].substring(0, 11) + "...";
+              lines.splice(2);
+            }
+
+            // Remove existing text and add multi-line text
+            text.text(null);
+            lines.forEach((line, i) => {
+              text.append("tspan")
+                .text(line)
+                .attr("x", 0)
+                .attr("dy", i === 0 ? "0" : "1.2em")
+                .attr("text-anchor", "middle");
+            });
+          }
+        }
+      });
 
     simulation.on("tick", () => {
       edges
