@@ -300,13 +300,13 @@ export default function DefaultView({
 
           if (name.length > 16) {
             // Split long names into maximum 2 lines
-            const words = name.split(' ');
+            const words = name.split(" ");
             const lines = [];
-            let currentLine = '';
+            let currentLine = "";
 
             for (const word of words) {
               if ((currentLine + word).length <= 14) {
-                currentLine += (currentLine ? ' ' : '') + word;
+                currentLine += (currentLine ? " " : "") + word;
               } else {
                 if (currentLine) lines.push(currentLine);
                 currentLine = word;
@@ -323,7 +323,8 @@ export default function DefaultView({
             // Remove existing text and add multi-line text
             text.text(null);
             lines.forEach((line, i) => {
-              text.append("tspan")
+              text
+                .append("tspan")
                 .text(line)
                 .attr("x", 0)
                 .attr("dy", i === 0 ? "0" : "1.2em")

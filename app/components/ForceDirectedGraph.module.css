@@ -57,6 +57,35 @@
   box-shadow: var(--standard-shadow);
 }
 
+.loadingCard {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--light-grey);
+  border-radius: var(--medium-rounded);
+  padding: var(--large-padding);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: var(--large-container-shadow);
+  pointer-events: auto;
+}
+
+.errorTitle {
+  font-family: var(--title-font-family);
+  font-size: var(--large-font-size);
+  font-weight: var(--bold-font-weight);
+  color: var(--main-text);
+  margin-bottom: var(--standard-gap);
+  letter-spacing: var(--large-letter-spacing);
+}
+
+.errorDescription {
+  font-family: var(--standard-font-family);
+  font-size: var(--standard-font-size);
+  color: var(--secondary-text);
+  line-height: var(--standard-line-height);
+  letter-spacing: var(--standard-letter-spacing);
+}
+
 .sliderControls {
   display: flex;
   gap: 0rem;

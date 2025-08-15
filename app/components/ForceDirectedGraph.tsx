@@ -8,6 +8,7 @@ import CompanyDetailsOverlay from "./CompanyDetailsOverlay";
 import BillFocusView from "./BillFocusView";
 import CompanyFocusView from "./CompanyFocusView";
 import DefaultView from "./DefaultView";
+import DashboardLoadingState from "./DashboardLoadingState";
 
 interface Node {
   id: string;
@@ -67,7 +68,8 @@ export default function ForceDirectedGraph() {
   const [dollarLimit, setDollarLimit] = useState<number>(2000000);
   const [showOnlyTopNodes, setShowOnlyTopNodes] = useState<boolean>(false);
   const [minCompanyCount, setMinCompanyCount] = useState<number>(10);
-  const [fringeCompanyThreshold, setFringeCompanyThreshold] = useState<number>(500000);
+  const [fringeCompanyThreshold, setFringeCompanyThreshold] =
+    useState<number>(500000);
   const [selectedBill, setSelectedBill] = useState<Node | null>(null);
   const [selectedCompanyNode, setSelectedCompanyNode] = useState<Node | null>(
     null,
@@ -156,10 +158,15 @@ export default function ForceDirectedGraph() {
         return targetId === selectedBill.id;
       });
       const connectedCompanyIds = new Set(
-        connectedEdges.map((e) => {
-          const sourceId = typeof e.source === "object" && e.source ? (e.source as any).id : e.source;
-          return sourceId;
-        }).filter(Boolean),
+        connectedEdges
+          .map((e) => {
+            const sourceId =
+              typeof e.source === "object" && e.source
+                ? (e.source as any).id
+                : e.source;
+            return sourceId;
+          })
+          .filter(Boolean),
       );
       const connectedCompanies = data.nodes.filter(
         (n: any) => n.type === "company" && connectedCompanyIds.has(n.id),
@@ -178,14 +185,22 @@ export default function ForceDirectedGraph() {
     } else if (viewMode === "company-focus" && selectedCompanyNode) {
       const companyNode = [selectedCompanyNode];
       const connectedEdges = data.edges.filter((e: any) => {
-        const sourceId = typeof e.source === "object" && e.source ? (e.source as any).id : e.source;
+        const sourceId =
+          typeof e.source === "object" && e.source
+            ? (e.source as any).id
+            : e.source;
         return sourceId === selectedCompanyNode.id;
       });
       const connectedBillIds = new Set(
-        connectedEdges.map((e) => {
-          const targetId = typeof e.target === "object" && e.target ? (e.target as any).id : e.target;
-          return targetId;
-        }).filter(Boolean),
+        connectedEdges
+          .map((e) => {
+            const targetId =
+              typeof e.target === "object" && e.target
+                ? (e.target as any).id
+                : e.target;
+            return targetId;
+          })
+          .filter(Boolean),
       );
       const connectedBills = data.nodes.filter(
         (n: any) => n.type === "bill" && connectedBillIds.has(n.id),
@@ -287,11 +302,24 @@ export default function ForceDirectedGraph() {
         return expenditure >= fringeCompanyThreshold;
       });
 
-      const significantCompanyIds = new Set(significantCompanies.map((n) => n.id));
+      const significantCompanyIds = new Set(
+        significantCompanies.map((n) => n.id),
+      );
       const significantEdges = workingData.edges.filter((e) => {
-        const sourceId = typeof e.source === "object" && e.source ? (e.source as any).id : e.source;
-        const targetId = typeof e.target === "object" && e.target ? (e.target as any).id : e.target;
-        return sourceId && targetId && significantCompanyIds.has(sourceId) && significantCompanyIds.has(targetId);
+        const sourceId =
+          typeof e.source === "object" && e.source
+            ? (e.source as any).id
+            : e.source;
+        const targetId =
+          typeof e.target === "object" && e.target
+            ? (e.target as any).id
+            : e.target;
+        return (
+          sourceId &&
+          targetId &&
+          significantCompanyIds.has(sourceId) &&
+          significantCompanyIds.has(targetId)
+        );
       });
 
       workingData = {
@@ -534,7 +562,13 @@ export default function ForceDirectedGraph() {
       const suggestedFringeThreshold = Math.max(100000, maxExpenditure * 0.05);
       setFringeCompanyThreshold(suggestedFringeThreshold);
     }
-  }, [data, maxExpenditure, dollarLimit, showOnlyTopNodes, fringeCompanyThreshold]);
+  }, [
+    data,
+    maxExpenditure,
+    dollarLimit,
+    showOnlyTopNodes,
+    fringeCompanyThreshold,
+  ]);
 
   useEffect(() => {
     if (!selectedCompany) return;
@@ -622,19 +656,20 @@ export default function ForceDirectedGraph() {
   };
 
   if (loading) {
-    return (
-      <div className={styles.fullscreen}>
-        <div className={styles.loading}>
-          <div className={styles.loadingText}>Loading visualization…</div>
-        </div>
-      </div>
-    );
+    return <DashboardLoadingState />;
   }
   if (error) {
     return (
       <div className={styles.fullscreen}>
         <div className={styles.loading}>
-          <div className={styles.loadingText}>Failed to load data</div>
+          <div className={styles.loadingCard}>
+            <h2 className={styles.errorTitle}>Failed to Load Dashboard</h2>
+            <p className={styles.errorDescription}>
+              Unable to load California Lobbyist Employer lobbying expenditures
+              data. Please try refreshing the page or contact support if the
+              issue persists.
+            </p>
+          </div>
         </div>
       </div>
     );

@@ -1,0 +1,99 @@
+.fullscreen {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--surface);
+}
+
+.loading {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11;
+    pointer-events: none;
+}
+
+.loadingCard {
+    background: var(--surface);
+    border: 1px solid var(--light-grey);
+    border-radius: var(--medium-rounded);
+    padding: var(--standard-padding);
+    max-width: 30rem;
+    width: 90%;
+    text-align: left;
+    box-shadow: var(--large-container-shadow);
+    pointer-events: auto;
+}
+
+.loadingTitle {
+    font-family: var(--title-font-family);
+    font-size: var(--subtitle-font-size);
+    font-weight: var(--extrabold-font-weight);
+    color: var(--main-text);
+    margin-bottom: var(--small-gap);
+}
+
+.loadingDescription {
+    font-family: var(--standard-font-family);
+    font-size: var(--small-font-size);
+    color: var(--secondary-text);
+    line-height: 1.2;
+    margin-bottom: var(--small-gap);
+}
+
+.loadingInstructions {
+    font-family: var(--small-font-family);
+    font-size: var(--small-font-size);
+    color: var(--secondary-text);
+    line-height: 1.2;
+    margin-bottom: var(--small-gap);
+    list-style-type: disc;
+    padding-left: 0.5rem;
+}
+
+.loadingInstructions li {
+    margin-bottom: 0.25rem;
+    padding-left: 0.25rem;
+}
+
+.dataSourceLink {
+    color: var(--act-now-dark);
+    font-weight: var(--bold-font-weight);
+    transition: color 0.2s ease;
+    font-weight: var(--extrabold-font-weight);
+}
+
+.dataSourceLink:hover {
+    color: var(--act-now-dark);
+    text-decoration: underline;
+}
+
+.dataSourceLink:visited {
+    color: var(--act-now-dark);
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .loadingCard {
+        padding: var(--standard-padding);
+        margin: var(--standard-gap);
+    }
+
+    .loadingTitle {
+        font-size: var(--subtitle-font-size);
+    }
+
+    .loadingDescription {
+        font-size: var(--small-font-size);
+    }
+}

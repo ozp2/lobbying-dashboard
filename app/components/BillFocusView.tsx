@@ -152,8 +152,12 @@ export default function BillFocusView({
           n.fx = width / 2;
           n.fy = height / 2;
         } else if (n.type === "company") {
-          const companyIndex = data.nodes.filter(node => node.type === "company").findIndex(node => node.id === n.id);
-          const angle = (companyIndex * 2 * Math.PI) / data.nodes.filter(node => node.type === "company").length;
+          const companyIndex = data.nodes
+            .filter((node) => node.type === "company")
+            .findIndex((node) => node.id === n.id);
+          const angle =
+            (companyIndex * 2 * Math.PI) /
+            data.nodes.filter((node) => node.type === "company").length;
           const radius = Math.min(width, height) * 0.9;
           n.x = width / 2 + Math.cos(angle) * radius;
           n.y = height / 2 + Math.sin(angle) * radius;

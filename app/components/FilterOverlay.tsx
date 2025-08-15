@@ -75,28 +75,28 @@ export default function FilterOverlay(props: FilterOverlayProps) {
             ? `$${(fringeCompanyThreshold / 1000000).toFixed(1)}M`
             : fringeCompanyThreshold >= 1000
               ? `$${(fringeCompanyThreshold / 1000).toFixed(0)}K`
-              : `$${fringeCompanyThreshold.toLocaleString()}`}
-          {" "}or less
+              : `$${fringeCompanyThreshold.toLocaleString()}`}{" "}
+          or less
         </label>
         <input
           type="range"
           min="0"
           max={maxExpenditure || 5000000}
-          step={Math.max(
-            10000,
-            Math.floor((maxExpenditure || 5000000) / 100),
-          )}
+          step={Math.max(10000, Math.floor((maxExpenditure || 5000000) / 100))}
           value={Math.min(fringeCompanyThreshold, maxExpenditure || 5000000)}
-          onChange={(e) => onFringeCompanyThresholdChange(parseInt(e.target.value))}
+          onChange={(e) =>
+            onFringeCompanyThresholdChange(parseInt(e.target.value))
+          }
           className={styles.slider}
         />
         <div className={styles.sliderHint}>
-          Hide companies spending {fringeCompanyThreshold >= 1000000
+          Hide companies spending{" "}
+          {fringeCompanyThreshold >= 1000000
             ? `$${(fringeCompanyThreshold / 1000000).toFixed(1)}M`
             : fringeCompanyThreshold >= 1000
               ? `$${(fringeCompanyThreshold / 1000).toFixed(0)}K`
-              : `$${fringeCompanyThreshold.toLocaleString()}`}
-          {" "}or less
+              : `$${fringeCompanyThreshold.toLocaleString()}`}{" "}
+          or less
         </div>
       </div>
       <div className={styles.controls}>

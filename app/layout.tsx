@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { nunitoSans, anonymousPro } from "./fonts";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "California Lobbyist Spending Dashboard",
@@ -16,8 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html
+      lang="en"
+      className={`${nunitoSans.variable} ${anonymousPro.variable}`}
+    >
+      <body className={nunitoSans.className}>{children}</body>
     </html>
   );
 }
