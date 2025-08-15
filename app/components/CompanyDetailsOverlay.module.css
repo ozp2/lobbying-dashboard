@@ -1,0 +1,76 @@
+.overlay {
+    width: 25rem;
+    max-width: 25rem;
+}
+
+.title {
+    font-weight: var(--bolder-font-weight);
+    font-size: var(--subtitle-font-size);
+    font-family: var(--standard-font-family);
+    margin-bottom: var(--mini-gap);
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-family: var(--standard-font-family);
+    font-size: var(--small-font-size);
+    color: var(--medium);
+    margin-bottom: var(--small-gap);
+    font-weight: var(--bolder-font-weight);
+    line-height: var(--standard-line-height);
+    letter-spacing: var(--standard-letter-spacing);
+}
+
+.lobbyingSummary {
+    margin-bottom: var(--standard-gap);
+}
+
+.lobbyingSummary strong {
+    font-weight: var(--bolder-font-weight);
+    color: var(--main-text);
+    display: block;
+    margin-bottom: var(--mini-gap);
+}
+
+.lobbyingSummary div {
+    color: var(--secondary-text);
+    font-size: var(--small-font-size);
+}
+
+.policyFocusAreas {
+    margin-bottom: var(--standard-gap);
+}
+
+.policyFocusAreas strong {
+    font-weight: var(--bolder-font-weight);
+    display: block;
+
+}
+
+.policyAreasList {
+    overflow-y: auto;
+    margin-top: var(--mini-gap);
+    font-size: var(--small-font-size);
+}
+
+.policyAreaItem {
+    padding: var(--mini-gap) 0;
+}
+
+.policyAreaHeader {
+    font-weight: var(--bolder-font-weight);
+    color: var(--dark);
+    font-size: var(--small-font-size);
+}
+
+.policyAreaBills {
+    color: var(--secondary-text);
+    font-size: var(--small-font-size);
+}
+
+.instructions {
+    margin-top: var(--small-gap);
+    font-size: var(--small-font-size);
+    color: var(--secondary-text);
+    font-style: italic;
+}

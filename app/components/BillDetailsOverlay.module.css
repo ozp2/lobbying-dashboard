@@ -43,10 +43,10 @@
 }
 
 .button {
-  padding: var(--dropdown-padding);
+  padding: 0.25rem 0.75rem;
   background-color: var(--surface);
   color: var(--main-text);
-  border: 0.0625rem solid var(--light-grey);
+  border: 0.0625rem solid var(--dark);
   border-radius: 3.125rem;
   font-size: var(--small-font-size);
   cursor: pointer;
@@ -55,7 +55,7 @@
 }
 
 .button:hover {
-  background-color: var(--light-grey);
+  background-color: var(--surface-container);
 }
 
 .instructions {

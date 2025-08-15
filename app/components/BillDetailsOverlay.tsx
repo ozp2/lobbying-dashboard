@@ -78,7 +78,7 @@ export default function BillDetailsOverlay({
       {bill.billId && (
         <div className={styles.controls}>
           <button onClick={onViewOnVeeto} className={overlayStyles.button}>
-            View Bill Details in Veeto
+            View Bill Details
           </button>
         </div>
       )}
