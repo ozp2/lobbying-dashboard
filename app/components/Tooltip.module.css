@@ -12,6 +12,7 @@
   box-shadow: var(--standard-shadow);
   left: -9999px;
   top: -9999px;
+  font-family: var(--standard-font-family);
 }
 
 .tooltip div {

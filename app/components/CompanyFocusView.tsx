@@ -188,7 +188,7 @@ export default function CompanyFocusView({
       .append("line")
       .attr("stroke", "#d1d5db")
       .attr("stroke-opacity", 0.6)
-      .attr("stroke-width", 2);
+      .attr("stroke-width", 1);
 
     const nodes = g
       .append("g")
@@ -283,7 +283,7 @@ export default function CompanyFocusView({
       })
       .attr("font-size", (d: any) => {
         if (d.type === "company") return "14px";
-        return "10px";
+        return "12px";
       })
       .attr("fill", (d: any) => {
         if (d.type === "company") return "#1f2937";
@@ -291,7 +291,8 @@ export default function CompanyFocusView({
       })
       .attr("font-weight", (d: any) => (d.type === "company" ? "700" : "500"))
       .attr("pointer-events", "none")
-      .style("text-shadow", "0 1px 4px rgba(255,255,255,0.95)");
+      .style("text-shadow", "0 1px 4px rgba(255,255,255,0.95)")
+      .style("font-family", "var(--standard-font-family)");
 
     simulation.on("tick", () => {
       edges

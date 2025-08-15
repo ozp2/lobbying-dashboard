@@ -67,6 +67,7 @@ export default function ForceDirectedGraph() {
   const [dollarLimit, setDollarLimit] = useState<number>(2000000);
   const [showOnlyTopNodes, setShowOnlyTopNodes] = useState<boolean>(false);
   const [minCompanyCount, setMinCompanyCount] = useState<number>(10);
+  const [fringeCompanyThreshold, setFringeCompanyThreshold] = useState<number>(500000);
   const [selectedBill, setSelectedBill] = useState<Node | null>(null);
   const [selectedCompanyNode, setSelectedCompanyNode] = useState<Node | null>(
     null,
@@ -155,9 +156,10 @@ export default function ForceDirectedGraph() {
         return targetId === selectedBill.id;
       });
       const connectedCompanyIds = new Set(
-        connectedEdges.map((e: any) =>
-          typeof e.source === "object" ? e.source.id : e.source,
-        ),
+        connectedEdges.map((e) => {
+          const sourceId = typeof e.source === "object" && e.source ? (e.source as any).id : e.source;
+          return sourceId;
+        }).filter(Boolean),
       );
       const connectedCompanies = data.nodes.filter(
         (n: any) => n.type === "company" && connectedCompanyIds.has(n.id),
@@ -171,6 +173,32 @@ export default function ForceDirectedGraph() {
           ...data.metadata,
           totalBills: 1,
           totalCompanies: connectedCompanies.length,
+        },
+      };
+    } else if (viewMode === "company-focus" && selectedCompanyNode) {
+      const companyNode = [selectedCompanyNode];
+      const connectedEdges = data.edges.filter((e: any) => {
+        const sourceId = typeof e.source === "object" && e.source ? (e.source as any).id : e.source;
+        return sourceId === selectedCompanyNode.id;
+      });
+      const connectedBillIds = new Set(
+        connectedEdges.map((e) => {
+          const targetId = typeof e.target === "object" && e.target ? (e.target as any).id : e.target;
+          return targetId;
+        }).filter(Boolean),
+      );
+      const connectedBills = data.nodes.filter(
+        (n: any) => n.type === "bill" && connectedBillIds.has(n.id),
+      );
+
+      return {
+        nodes: [...companyNode, ...connectedBills],
+        edges: connectedEdges,
+        bills: data.bills,
+        metadata: {
+          ...data.metadata,
+          totalBills: connectedBills.length,
+          totalCompanies: 1,
         },
       };
     }
@@ -205,6 +233,28 @@ export default function ForceDirectedGraph() {
         ...data,
         nodes: [...validBills, ...validCompanies],
         edges: validEdges,
+      };
+    }
+
+    // Filter out fringe companies in default view to reduce clutter
+    if (noFilters && !selectedCompany && viewMode === "default") {
+      const significantCompanies = workingData.nodes.filter((n) => {
+        if (n.type !== "company") return true;
+        const expenditure = n.totalExpenditure || n.expenditure || 0;
+        return expenditure >= fringeCompanyThreshold;
+      });
+
+      const significantCompanyIds = new Set(significantCompanies.map((n) => n.id));
+      const significantEdges = workingData.edges.filter((e) => {
+        const sourceId = typeof e.source === "object" && e.source ? (e.source as any).id : e.source;
+        const targetId = typeof e.target === "object" && e.target ? (e.target as any).id : e.target;
+        return sourceId && targetId && significantCompanyIds.has(sourceId) && significantCompanyIds.has(targetId);
+      });
+
+      workingData = {
+        ...workingData,
+        nodes: significantCompanies,
+        edges: significantEdges,
       };
     }
 
@@ -285,6 +335,9 @@ export default function ForceDirectedGraph() {
     isIsolationMode,
     selectedBill,
     minCompanyCount,
+    fringeCompanyThreshold,
+    viewMode,
+    selectedCompanyNode,
   ]);
 
   useEffect(() => {
@@ -319,7 +372,7 @@ export default function ForceDirectedGraph() {
         try {
           const parsed = JSON.parse(value);
           if (Array.isArray(parsed)) return parsed.filter(Boolean);
-        } catch (e) {}
+        } catch (e) { }
         const split = value
           .split(/\n|\r|\u2022|\-|;|\•/)
           .map((s) => s.trim())
@@ -444,7 +497,13 @@ export default function ForceDirectedGraph() {
         setDollarLimit(suggestedLimit);
       }
     }
-  }, [data, maxExpenditure, dollarLimit, showOnlyTopNodes]);
+
+    // Set intelligent default for fringe company threshold
+    if (data && maxExpenditure > 0 && fringeCompanyThreshold === 500000) {
+      const suggestedFringeThreshold = Math.max(100000, maxExpenditure * 0.05);
+      setFringeCompanyThreshold(suggestedFringeThreshold);
+    }
+  }, [data, maxExpenditure, dollarLimit, showOnlyTopNodes, fringeCompanyThreshold]);
 
   useEffect(() => {
     if (!selectedCompany) return;
@@ -527,6 +586,8 @@ export default function ForceDirectedGraph() {
     minCompanyCount,
     onMinCompanyCountChange: setMinCompanyCount,
     maxCompanyCount,
+    fringeCompanyThreshold,
+    onFringeCompanyThresholdChange: setFringeCompanyThreshold,
   };
 
   if (loading) {
@@ -572,23 +633,23 @@ export default function ForceDirectedGraph() {
             connectedBills={
               displayData
                 ? (displayData.edges
-                    .filter((e): e is Link => {
-                      if (!e.source) return false;
-                      const sourceId =
-                        typeof e.source === "object"
-                          ? (e.source as Node).id
-                          : e.source;
-                      return sourceId === selectedCompanyNode.id;
-                    })
-                    .map((e) => {
-                      if (!e.target) return null;
-                      const targetId =
-                        typeof e.target === "object"
-                          ? (e.target as Node).id
-                          : e.target;
-                      return displayData.nodes.find((n) => n.id === targetId);
-                    })
-                    .filter(Boolean) as Node[])
+                  .filter((e): e is Link => {
+                    if (!e.source) return false;
+                    const sourceId =
+                      typeof e.source === "object"
+                        ? (e.source as Node).id
+                        : e.source;
+                    return sourceId === selectedCompanyNode.id;
+                  })
+                  .map((e) => {
+                    if (!e.target) return null;
+                    const targetId =
+                      typeof e.target === "object"
+                        ? (e.target as Node).id
+                        : e.target;
+                    return displayData.nodes.find((n) => n.id === targetId);
+                  })
+                  .filter(Boolean) as Node[])
                 : []
             }
             onClose={handleClearCompanySelection}
@@ -623,6 +684,7 @@ export default function ForceDirectedGraph() {
           onBillClick={handleBillClick}
           onCompanyClick={handleCompanyClick}
           containerRef={containerRef}
+          isFiltered={fringeCompanyThreshold > 0 && viewMode === "default"}
         />
       )}
     </div>

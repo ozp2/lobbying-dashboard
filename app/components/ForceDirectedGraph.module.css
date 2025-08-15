@@ -25,6 +25,7 @@
   border-radius: var(--medium-rounded);
   padding: var(--small-padding);
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   color: var(--main-text);
   line-height: var(--notification-line-height);
   box-shadow: var(--standard-shadow);
@@ -51,6 +52,7 @@
   border-radius: var(--small-rounded);
   padding: var(--dropdown-padding);
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   color: var(--secondary-text);
   box-shadow: var(--standard-shadow);
 }
@@ -73,6 +75,7 @@
 
 .select {
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   padding: var(--dropdown-padding);
   border: 1px solid var(--light-grey);
   border-radius: var(--small-rounded);
@@ -84,6 +87,7 @@
 
 .input {
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   padding: var(--dropdown-padding);
   border: 1px solid var(--light-grey);
   border-radius: var(--small-rounded);
@@ -96,11 +100,13 @@
 .title {
   font-weight: var(--bolder-font-weight);
   font-size: var(--subtitle-font-size);
+  font-family: var(--standard-font-family);
   margin-bottom: var(--mini-gap);
 }
 
 .subtitle {
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   color: var(--secondary-text);
   margin-top: var(--mini-gap);
 }
@@ -110,6 +116,7 @@
   align-items: center;
   gap: var(--mini-gap);
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   color: var(--main-text);
   cursor: pointer;
 }
@@ -120,9 +127,18 @@
 
 .sliderLabel {
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   color: var(--main-text);
   margin-bottom: var(--mini-gap);
   display: block;
+}
+
+.sliderHint {
+  font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
+  color: var(--medium);
+  margin-top: var(--mini-gap);
+  font-weight: var(--normal-font-weight);
 }
 
 .slider {
@@ -139,6 +155,7 @@
 
 .nodeCount {
   font-size: var(--small-font-size);
+  font-family: var(--standard-font-family);
   color: var(--secondary-text);
   margin-top: var(--small-gap);
   padding-top: var(--small-gap);

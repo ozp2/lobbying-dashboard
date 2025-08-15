@@ -163,7 +163,7 @@ export default function BillFocusView({
 
         if (!n.x && !n.y) {
           const gridSize = Math.ceil(Math.sqrt(data.nodes.length));
-          const cellSize = (Math.max(width, height) * 2.5) / gridSize;
+          const cellSize = (Math.max(width, height) * 3.5) / gridSize;
           const row = Math.floor(i / gridSize);
           const col = i % gridSize;
           const centerX = width / 2;
@@ -171,11 +171,11 @@ export default function BillFocusView({
           n.x =
             centerX +
             (col - gridSize / 2 + 0.5) * cellSize +
-            (Math.random() - 0.5) * 300;
+            (Math.random() - 0.5) * 400;
           n.y =
             centerY +
             (row - gridSize / 2 + 0.5) * cellSize +
-            (Math.random() - 0.5) * 300;
+            (Math.random() - 0.5) * 400;
         }
       }
     });
@@ -191,28 +191,28 @@ export default function BillFocusView({
         d3
           .forceLink(data.edges)
           .id((d: any) => d.id)
-          .distance(isIsolationMode ? 100 : 400)
-          .strength(isIsolationMode ? 0.3 : 0.01),
+          .distance(isIsolationMode ? 150 : 600)
+          .strength(isIsolationMode ? 0.3 : 0.005),
       )
       .force(
         "charge",
         d3
           .forceManyBody()
-          .strength(isIsolationMode ? -300 : -2000)
-          .distanceMax(isIsolationMode ? 200 : 1200)
+          .strength(isIsolationMode ? -300 : -3000)
+          .distanceMax(isIsolationMode ? 200 : 1500)
           .theta(0.8),
       )
       .force(
         "center",
         isIsolationMode
           ? null
-          : d3.forceCenter(width / 2, height / 2).strength(0.05),
+          : d3.forceCenter(width / 2, height / 2).strength(0.02),
       )
       .force(
         "collision",
         d3
           .forceCollide()
-          .radius((d: any) => nodeRadius(d) + (isIsolationMode ? 10 : 50))
+          .radius((d: any) => nodeRadius(d) + (isIsolationMode ? 10 : 80))
           .strength(0.7)
           .iterations(2),
       );
@@ -226,7 +226,7 @@ export default function BillFocusView({
       .append("line")
       .attr("stroke", "#d1d5db")
       .attr("stroke-opacity", isIsolationMode ? 0.4 : 0.6)
-      .attr("stroke-width", isIsolationMode ? 2 : 2);
+      .attr("stroke-width", 1);
 
     const nodes = g
       .append("g")
@@ -321,7 +321,7 @@ export default function BillFocusView({
       })
       .attr("font-size", (d: any) => {
         if (d.type === "bill") return "14px";
-        return "8px";
+        return "12px";
       })
       .attr("fill", (d: any) => {
         if (d.type === "bill") return "#111827";
@@ -329,7 +329,8 @@ export default function BillFocusView({
       })
       .attr("font-weight", (d: any) => (d.type === "bill" ? "700" : "400"))
       .attr("pointer-events", "none")
-      .style("text-shadow", "0 1px 4px rgba(255,255,255,0.95)");
+      .style("text-shadow", "0 1px 4px rgba(255,255,255,0.95)")
+      .style("font-family", "var(--standard-font-family)");
 
     simulation.on("tick", () => {
       edges

@@ -56,6 +56,7 @@ interface DefaultViewProps {
   onBillClick: (bill: Node) => void;
   onCompanyClick: (company: Node) => void;
   containerRef: React.RefObject<HTMLDivElement>;
+  isFiltered?: boolean;
 }
 
 export default function DefaultView({
@@ -63,6 +64,7 @@ export default function DefaultView({
   onBillClick,
   onCompanyClick,
   containerRef,
+  isFiltered,
 }: DefaultViewProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const { showTooltip, moveTooltip, hideTooltip } = useTooltip({
@@ -289,7 +291,8 @@ export default function DefaultView({
       })
       .attr("font-weight", (d: any) => (d.type === "bill" ? "600" : "400"))
       .attr("pointer-events", "none")
-      .style("text-shadow", "0 1px 3px rgba(255,255,255,0.9)");
+      .style("text-shadow", "0 1px 3px rgba(255,255,255,0.9)")
+      .attr("font-family", "var(--standard-font-family)");
 
     simulation.on("tick", () => {
       edges
@@ -321,7 +324,34 @@ export default function DefaultView({
     return () => {
       simulation.stop();
     };
-  }, [data, onBillClick, onCompanyClick]);
+  }, [data, onBillClick, onCompanyClick, isFiltered]);
 
-  return <svg ref={svgRef} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <svg ref={svgRef} style={{ width: "100%", height: "100%" }}>
+      {isFiltered && (
+        <g className="filter-indicator">
+          <rect
+            x="20"
+            y="20"
+            width="320"
+            height="45"
+            fill="rgba(0,0,0,0.8)"
+            stroke="rgba(255,255,255,0.3)"
+            strokeWidth="1"
+            rx="8"
+          />
+          <text
+            x="35"
+            y="45"
+            fill="white"
+            fontSize="13"
+            fontFamily="var(--standard-font-family)"
+            fontWeight="500"
+          >
+            💡 Small companies hidden for clarity. Click a bill to see all.
+          </text>
+        </g>
+      )}
+    </svg>
+  );
 }
