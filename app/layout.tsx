@@ -3,9 +3,9 @@ import { nunitoSans, anonymousPro } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "California Lobbyist Spending Dashboard",
+  title: "California Lobbying Expenditures",
   description:
-    "Interactive visualization of lobbyist spending by sector with AI-powered categorization",
+    "Visualization of state legislation lobbying expenditures in California for the 2025-2026 legislative session",
 };
 
 export default function RootLayout({
