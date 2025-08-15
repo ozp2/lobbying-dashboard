@@ -1,0 +1,468 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Anonymous+Pro:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap");
+
+/* Define Global Breakpoints Using CSS Variables */
+:root {
+  --breakpoint-mobile: 650px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1200px;
+  --breakpoint-large: 1380px;
+  /* Change grid to 2 columns at this point */
+}
+
+/* Set base font size */
+html {
+  font-size: 16px;
+  /* This makes 1rem = 16px */
+}
+
+@media (max-width: 1400px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 1380px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+    /* Switch to 2 columns */
+  }
+}
+
+@media (max-width: 768px) {
+  .gridContainer {
+    grid-template-columns: 1fr;
+    /* Switch to 1 column */
+  }
+
+  .sidebar {
+    display: none;
+    /* Hide sidebar on small screens */
+  }
+}
+
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global Element Styles */
+a:visited {
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+  opacity: 1;
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--light-grey);
+}
+
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+div,
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+span {
+  font-family: var(--standard-font-family);
+}
+
+p {
+  font-family: var(--standard-font-family);
+}
+
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 0.02rem rgba(135, 132, 61, 0.25);
+}
+
+input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 0.02rem rgba(135, 132, 61, 0.25);
+}
+
+input {
+  background: var(--surface);
+  padding: 0.625rem;
+  font-family: var(--standard-font-family);
+  font-size: var(--standard-font-size);
+  color: var(--main-text);
+  letter-spacing: var(--standard-letter-spacing);
+  transition: border-color 0.3s ease;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* Global Link Styles */
+a:visited {
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+  opacity: 1;
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+button:focus {
+  outline: inherit;
+}
+
+button {
+  border: none;
+  background: inherit;
+  color: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  stroke: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Main Colors */
+:root {
+  --surface: #fdfcf8;
+  --surface-container: #f7f1ef;
+  --light-grey: #f1ece9;
+  --tag: #ede2dc;
+  --hover-color: #e5ded9;
+  --medium: #928982;
+  --medium-dark: #6f6762;
+  --dark: #22181c;
+  --main-text: #291d15;
+  --secondary-text: #675a51;
+  --accent: #60784f;
+  --pop: #d94a16;
+  --dark-accent: #2c3923;
+}
+
+/* Border Radius */
+:root {
+  --full-rounded: 66.25rem;
+  --medium-rounded: 0.75rem;
+  --small-rounded: 0.5rem;
+  --tag-rounded: 0.375rem;
+  --checkbox-rounded: 0.25rem;
+}
+
+/* Gaps & Padding */
+:root {
+  --extra-large-gap: 2rem;
+  --large-gap: 1.5rem;
+  --medium-gap: 1.25rem;
+  --mobile-gap: 1rem;
+  --standard-gap: 0.75rem;
+  --small-medium-gap: 0.625rem;
+  --small-gap: 0.5rem;
+  --mini-gap: 0.25rem;
+  --hairline-gap: 0.1875rem;
+
+  --standard-padding: 1.5rem;
+  --mobile-component-padding: 1.25rem;
+  --mobile-padding: 1rem;
+  --small-padding: 0.75rem;
+  --tag-padding: 0.27rem 0.5rem 0.18rem 0.5rem;
+  --tag-padding-mobile: 0.2rem 0.45rem 0.15rem 0.45rem;
+  --large-button-padding: 0.6rem 1.5rem;
+  --primary-button-padding: 0.25rem 0.75rem;
+  --secondary-button-padding: 0.3125rem 0.75rem;
+  --legislator-chip-padding: 0.1875rem 0.125rem 0.1875rem 0.125rem;
+  --form-input-padding: 0.75rem 0.875rem;
+  --form-chip-input-padding: 0.75rem 0.625rem;
+  --dropdown-padding: 0.5rem 0.75rem;
+  --dropdown-item-padding: 0.375rem 0.625rem;
+}
+
+/* Fonts */
+:root {
+  --large-font-size: 1.5rem;
+  --medium-font-size: 1.3rem;
+  --title-font-size: 1.2rem;
+  --subtitle-font-size: 1.1rem;
+  /*subtitles, bill numbers, etc.*/
+  --standard-font-size: 1rem;
+  --tag-font-size: 0.75rem;
+  --small-font-size: 0.9rem;
+
+  --medium-line-height: 1.7rem;
+  --standard-line-height: 1.6rem;
+  --notification-line-height: 1.35rem;
+  --small-line-height: 1rem;
+
+  --tag-letter-spacing: 0.12rem;
+  --standard-letter-spacing: 0.03rem;
+  --large-letter-spacing: 0.05rem;
+  --extra-large-letter-spacing: 0.07rem;
+
+  --standard-font-family: var(--font-nunito-sans, "Nunito Sans", sans-serif);
+  --secondary-font-family: var(
+    --font-anonymous-pro,
+    "Anonymous Pro",
+    monospace
+  );
+  --title-font-family: var(--font-instrument-serif, "Instrument Serif", serif);
+
+  --standard-font-weight: 400;
+  --bold-font-weight: 500;
+  --bolder-font-weight: 600;
+  --extrabold-font-weight: 700;
+}
+
+/* Shadows */
+:root {
+  --standard-shadow: 0px 0px 26px 0px rgba(204, 201, 198, 0.2);
+  --large-container-shadow:
+    0px 0px 26px 0px rgba(225, 224, 193, 0.38),
+    0px 0px 10px 0px rgba(202, 202, 194, 0.49);
+}
+
+/* Text selection highlight color */
+::selection {
+  background-color: rgba(106, 104, 29, 0.241);
+  color: var(--main-text);
+}
+
+/* Image Sizing Variables for Play Page */
+:root {
+  --image-column-width: 325px;
+  --image-gap: 15px;
+  --columns-count: 150;
+}
+
+/* Responsive Image Sizing */
+@media (max-width: 768px) {
+  :root {
+    --image-column-width: 150px;
+    --image-gap: 10px;
+    --columns-count: 100;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --image-column-width: 200px;
+    --image-gap: 8px;
+    --columns-count: 80;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --image-column-width: 180px;
+    --image-gap: 5px;
+    --columns-count: 60;
+  }
+}
+
+/* Dashboard-specific styles */
+body {
+  background: var(--surface);
+  color: var(--main-text);
+  font-family: var(--standard-font-family);
+  line-height: var(--standard-line-height);
+  letter-spacing: var(--standard-letter-spacing);
+}
+
+.dashboardContainer {
+  min-height: 100vh;
+  padding: var(--standard-padding);
+  background: var(--surface);
+}
+
+.dashboardHeader {
+  text-align: center;
+  margin-bottom: var(--large-gap);
+}
+
+.dashboardTitle {
+  font-family: var(--title-font-family);
+  font-size: var(--large-font-size);
+  color: var(--main-text);
+  margin-bottom: var(--small-gap);
+}
+
+.dashboardSubtitle {
+  font-size: var(--subtitle-font-size);
+  color: var(--secondary-text);
+  font-weight: var(--standard-font-weight);
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--large-gap);
+  margin-bottom: var(--large-gap);
+}
+
+.chartCard {
+  background: var(--surface-container);
+  border-radius: var(--medium-rounded);
+  padding: var(--standard-padding);
+  box-shadow: var(--standard-shadow);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.chartCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--large-container-shadow);
+}
+
+.chartTitle {
+  font-family: var(--title-font-family);
+  font-size: var(--title-font-size);
+  color: var(--main-text);
+  margin-bottom: var(--standard-gap);
+  text-align: center;
+}
+
+.sectorBreakdown {
+  background: var(--surface-container);
+  border-radius: var(--medium-rounded);
+  padding: var(--standard-padding);
+  box-shadow: var(--standard-shadow);
+  margin-bottom: var(--large-gap);
+}
+
+.sectorTitle {
+  font-family: var(--title-font-family);
+  font-size: var(--title-font-size);
+  color: var(--main-text);
+  margin-bottom: var(--standard-gap);
+  text-align: center;
+}
+
+.sectorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--standard-gap);
+}
+
+.sectorCard {
+  background: var(--surface);
+  border-radius: var(--small-rounded);
+  padding: var(--standard-padding);
+  border: 1px solid var(--light-grey);
+  transition: all 0.2s ease;
+}
+
+.sectorCard:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.sectorName {
+  font-weight: var(--bolder-font-weight);
+  color: var(--main-text);
+  margin-bottom: var(--small-gap);
+}
+
+.sectorAmount {
+  font-size: var(--medium-font-size);
+  color: var(--accent);
+  font-weight: var(--extrabold-font-weight);
+}
+
+.sectorCount {
+  font-size: var(--small-font-size);
+  color: var(--secondary-text);
+  margin-top: var(--mini-gap);
+}
+
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: var(--accent);
+}
+
+.errorMessage {
+  background: #fee;
+  color: var(--pop);
+  padding: var(--standard-padding);
+  border-radius: var(--small-rounded);
+  text-align: center;
+  margin: var(--standard-gap) 0;
+}
+
+@media (max-width: 768px) {
+  .dashboardContainer {
+    padding: var(--mobile-padding);
+  }
+
+  .chartGrid {
+    grid-template-columns: 1fr;
+    gap: var(--mobile-gap);
+  }
+
+  .chartCard {
+    padding: var(--mobile-component-padding);
+  }
+
+  .sectorGrid {
+    grid-template-columns: 1fr;
+  }
+}

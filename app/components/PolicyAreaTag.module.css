@@ -1,0 +1,26 @@
+.policyAreaTag {
+  padding: 0.2rem 0.6rem 0.15rem 0.6rem;
+  border-radius: var(--full-rounded);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.policyAreaTagText {
+  color: var(--surface);
+  font-size: 0.7rem;
+  font-family: var(--secondary-font-family);
+  font-weight: var(--standard-font-weight);
+  line-height: var(--small-line-height);
+  letter-spacing: var(--large-letter-spacing);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 650px) {
+  .policyAreaTagText {
+    font-size: var(--small-font-size);
+    font-weight: var(--bold-font-weight);
+  }
+}

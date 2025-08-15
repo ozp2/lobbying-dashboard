@@ -1,0 +1,66 @@
+.titleContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--small-gap);
+  margin-bottom: var(--mini-gap);
+}
+
+.titleText {
+  margin: 0;
+}
+
+.subtitle {
+  margin-bottom: var(--small-gap);
+}
+
+.lobbyingActivity {
+  margin-bottom: var(--standard-gap);
+}
+
+.keyTakeawaysContainer {
+  margin-bottom: var(--standard-gap);
+}
+
+.keyTakeawaysList {
+  margin-top: var(--mini-gap);
+  padding-left: 1.2rem;
+  font-size: var(--small-font-size);
+  line-height: 1.5;
+  list-style-type: disc;
+}
+
+.keyTakeawaysItem {
+  margin-bottom: var(--small-gap);
+  display: list-item;
+  list-style-position: outside;
+}
+
+.noTakeaways {
+  margin-bottom: var(--standard-gap);
+  font-size: var(--small-font-size);
+  color: var(--secondary-text);
+  font-style: italic;
+}
+
+.button {
+  padding: var(--dropdown-padding);
+  background-color: var(--surface);
+  color: var(--main-text);
+  border: 0.0625rem solid var(--light-grey);
+  border-radius: 3.125rem;
+  font-size: var(--small-font-size);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background-color: var(--light-grey);
+}
+
+.instructions {
+  margin-top: var(--small-gap);
+  font-size: var(--small-font-size);
+  color: var(--secondary-text);
+  font-style: italic;
+}
