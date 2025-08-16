@@ -141,20 +141,6 @@
   margin-top: var(--mini-gap);
 }
 
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  gap: var(--mini-gap);
-  font-size: var(--small-font-size);
-  font-family: var(--standard-font-family);
-  color: var(--main-text);
-  cursor: pointer;
-}
-
-.checkbox {
-  cursor: pointer;
-}
-
 .sliderLabel {
   font-size: var(--small-font-size);
   font-family: var(--standard-font-family);
@@ -174,6 +160,7 @@
 .slider {
   width: 100%;
   max-width: 20rem;
+  accent-color: var(--act-now-dark);
 }
 
 .slider:active,
@@ -181,6 +168,32 @@
   border: none;
   outline: none;
   box-shadow: none;
+}
+
+/* Webkit slider styling for better cross-browser support */
+.slider::-webkit-slider-thumb {
+  background: var(--act-now-dark);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: var(--light-grey);
+  border-radius: var(--small-rounded);
+}
+
+/* Firefox slider styling */
+.slider::-moz-range-thumb {
+  background: var(--act-now-dark);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.slider::-moz-range-track {
+  background: var(--light-grey);
+  border-radius: var(--small-rounded);
+  border: none;
 }
 
 .nodeCount {

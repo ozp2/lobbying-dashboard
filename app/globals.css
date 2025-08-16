@@ -194,6 +194,8 @@ button:hover {
   --accent: #60784f;
   --pop: #d94a16;
   --dark-accent: #2c3923;
+  --act-now-dark: #87843d;
+  --act-now-light: #f1edd5;
 }
 
 /* Border Radius */
