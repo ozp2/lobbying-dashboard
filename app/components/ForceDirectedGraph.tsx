@@ -78,6 +78,7 @@ export default function ForceDirectedGraph() {
   const [viewMode, setViewMode] = useState<
     "default" | "bill-focus" | "company-focus"
   >("default");
+  const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(true);
 
   const handleMinCompanyCountChange = useCallback((value: number) => {
     setMinCompanyCount(value);
@@ -742,52 +743,73 @@ export default function ForceDirectedGraph() {
 
   return (
     <div ref={containerRef} className={styles.fullscreen}>
-      <div className="filterOverlay">
-        {viewMode === "bill-focus" && selectedBill ? (
-          <BillDetailsOverlay
-            bill={selectedBill}
-            connectedCompanies={
-              displayData?.nodes.filter((n) => n.type === "company") || []
-            }
-            onClose={handleExitIsolation}
-            onViewOnVeeto={() => {
-              if (selectedBill.billId) {
-                const url = `https://veeto.app/bill/${selectedBill.billId}`;
-                window.open(url, "_blank");
+      {/* Floating toggle button */}
+      {!isOverlayVisible && (
+        <button
+          className={styles.toggleButton}
+          onClick={() => setIsOverlayVisible(true)}
+          title="Show overlay"
+        >
+          <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1.70996 16.5801L11.71 21.5801L21.71 16.5801M1.70996 11.5801L11.71 16.5801L21.71 11.5801M11.71 1.58008L1.70996 6.58008L11.71 11.5801L21.71 6.58008L11.71 1.58008Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      )}
+
+      {/* Overlay panel */}
+      {isOverlayVisible && (
+        <div className="filterOverlay">
+          {viewMode === "bill-focus" && selectedBill ? (
+            <BillDetailsOverlay
+              bill={selectedBill}
+              connectedCompanies={
+                displayData?.nodes.filter((n) => n.type === "company") || []
               }
-            }}
-          />
-        ) : viewMode === "company-focus" && selectedCompanyNode ? (
-          <CompanyDetailsOverlay
-            company={selectedCompanyNode}
-            connectedBills={
-              displayData
-                ? (displayData.edges
-                  .filter((e): e is Link => {
-                    if (!e.source) return false;
-                    const sourceId =
-                      typeof e.source === "object"
-                        ? (e.source as Node).id
-                        : e.source;
-                    return sourceId === selectedCompanyNode.id;
-                  })
-                  .map((e) => {
-                    if (!e.target) return null;
-                    const targetId =
-                      typeof e.target === "object"
-                        ? (e.target as Node).id
-                        : e.target;
-                    return displayData.nodes.find((n) => n.id === targetId);
-                  })
-                  .filter(Boolean) as Node[])
-                : []
-            }
-            onClose={handleClearCompanySelection}
-          />
-        ) : (
-          <FilterOverlay {...filterOverlayProps} />
-        )}
-      </div>
+              onClose={handleExitIsolation}
+              onViewOnVeeto={() => {
+                if (selectedBill.billId) {
+                  const url = `https://veeto.app/bill/${selectedBill.billId}`;
+                  window.open(url, "_blank");
+                }
+              }}
+              onToggleOverlay={() => setIsOverlayVisible(false)}
+            />
+          ) : viewMode === "company-focus" && selectedCompanyNode ? (
+            <CompanyDetailsOverlay
+              company={selectedCompanyNode}
+              connectedBills={
+                displayData
+                  ? (displayData.edges
+                    .filter((e): e is Link => {
+                      if (!e.source) return false;
+                      const sourceId =
+                        typeof e.source === "object"
+                          ? (e.source as Node).id
+                          : e.source;
+                      return sourceId === selectedCompanyNode.id;
+                    })
+                    .map((e) => {
+                      if (!e.target) return null;
+                      const targetId =
+                        typeof e.target === "object"
+                          ? (e.target as Node).id
+                          : e.target;
+                      return displayData.nodes.find((n) => n.id === targetId);
+                    })
+                    .filter(Boolean) as Node[])
+                  : []
+              }
+              onClose={handleClearCompanySelection}
+              onToggleOverlay={() => setIsOverlayVisible(false)}
+            />
+          ) : (
+            <FilterOverlay
+              {...filterOverlayProps}
+              onToggleOverlay={() => setIsOverlayVisible(false)}
+            />
+          )}
+        </div>
+      )}
       {viewMode === "bill-focus" ? (
         <BillFocusView
           key={`bill-${selectedBill?.id}-${displayData?.nodes.length}`}
@@ -799,6 +821,12 @@ export default function ForceDirectedGraph() {
           onExitIsolation={handleExitIsolation}
           onClearCompanySelection={handleClearCompanySelection}
           containerRef={containerRef}
+          onViewOnVeeto={(bill) => {
+            if (bill.billId) {
+              const url = `https://veeto.app/bill/${bill.billId}`;
+              window.open(url, "_blank");
+            }
+          }}
         />
       ) : viewMode === "company-focus" ? (
         <CompanyFocusView

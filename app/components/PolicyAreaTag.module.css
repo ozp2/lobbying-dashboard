@@ -8,7 +8,7 @@
 
 .policyAreaTagText {
   color: var(--surface);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-family: var(--secondary-font-family);
   font-weight: var(--standard-font-weight);
   line-height: var(--small-line-height);

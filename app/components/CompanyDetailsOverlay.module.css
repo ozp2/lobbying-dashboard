@@ -74,3 +74,11 @@
     color: var(--secondary-text);
     font-style: italic;
 }
+
+
+
+@media (max-width: 420px) {
+    .overlay {
+        max-width: 90svw;
+    }
+}

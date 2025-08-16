@@ -60,6 +60,7 @@ interface BillFocusViewProps {
   onExitIsolation: () => void;
   onClearCompanySelection?: () => void;
   containerRef: React.RefObject<HTMLDivElement>;
+  onViewOnVeeto?: (bill: Node) => void;
 }
 
 export default function BillFocusView({
@@ -71,6 +72,7 @@ export default function BillFocusView({
   onExitIsolation,
   onClearCompanySelection,
   containerRef,
+  onViewOnVeeto,
 }: BillFocusViewProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const { showTooltip, moveTooltip, hideTooltip } = useTooltip({
@@ -293,7 +295,12 @@ export default function BillFocusView({
         event.stopPropagation();
         hideTooltip();
         if (d.type === "bill") {
-          onBillClick(d);
+          // If the bill has a billId and onViewOnVeeto is provided, open Veeto page directly
+          if (d.billId && onViewOnVeeto) {
+            onViewOnVeeto(d);
+          } else {
+            onBillClick(d);
+          }
         } else if (d.type === "company") {
           onCompanyClick(d);
         }

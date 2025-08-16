@@ -25,12 +25,14 @@ interface CompanyDetailsOverlayProps {
   company: Node;
   connectedBills: Node[];
   onClose: () => void;
+  onToggleOverlay: () => void;
 }
 
 export default function CompanyDetailsOverlay({
   company,
   connectedBills,
   onClose,
+  onToggleOverlay,
 }: CompanyDetailsOverlayProps) {
   const totalExpenditure = company.totalExpenditure || company.expenditure || 0;
   const billCount = connectedBills.length;
@@ -51,6 +53,17 @@ export default function CompanyDetailsOverlay({
 
   return (
     <div className={`${styles.overlay} ${overlayStyles.overlay}`}>
+      {/* Close button */}
+      <button
+        className={styles.closeButton}
+        onClick={onToggleOverlay}
+        title="Close overlay"
+      >
+        <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 13.5801L1 7.58008L7 1.58008" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+
       <div className={overlayStyles.title}>{company.label}</div>
 
       {company.sector && (

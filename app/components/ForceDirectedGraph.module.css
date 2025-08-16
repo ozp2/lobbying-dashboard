@@ -191,3 +191,75 @@
   padding-top: var(--small-gap);
   border-top: 1px solid var(--light-grey);
 }
+
+.toggleButton {
+  position: fixed;
+  top: var(--standard-gap);
+  left: var(--standard-gap);
+  z-index: 15;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--light-grey);
+  box-shadow: var(--standard-shadow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+  background: var(--surface-container);
+}
+
+.toggleButton svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--medium);
+}
+
+.toggleButton svg path {
+  stroke: var(--medium);
+}
+
+.closeButton {
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  transform: translateY(-50%);
+  background: var(--surface);
+  border: 1px solid var(--light-grey);
+  cursor: pointer;
+  padding: var(--mini-gap);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 36px;
+  box-shadow: var(--standard-shadow);
+  z-index: 11;
+}
+
+.closeButton:hover {
+  background: var(--surface-container);
+}
+
+.closeButton svg {
+  width: 12px;
+  height: 14px;
+  color: var(--medium);
+}
+
+.closeButton svg path {
+  stroke: var(--medium);
+}
+
+@media (max-width: 420px) {
+  .overlay {
+    max-width: 90svw;
+  }
+}

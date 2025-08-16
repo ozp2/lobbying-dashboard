@@ -3,6 +3,7 @@
   align-items: center;
   gap: var(--small-gap);
   margin-bottom: var(--mini-gap);
+  flex-wrap: wrap;
 }
 
 .titleText {

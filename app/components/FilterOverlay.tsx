@@ -11,6 +11,7 @@ interface FilterOverlayProps {
   maxCompanyCount: number;
   fringeCompanyThreshold: number;
   onFringeCompanyThresholdChange: (value: number) => void;
+  onToggleOverlay: () => void;
 }
 
 export default function FilterOverlay(props: FilterOverlayProps) {
@@ -25,10 +26,22 @@ export default function FilterOverlay(props: FilterOverlayProps) {
     maxCompanyCount,
     fringeCompanyThreshold,
     onFringeCompanyThresholdChange,
+    onToggleOverlay,
   } = props;
 
   return (
     <div className={styles.overlay}>
+      {/* Close button */}
+      <button
+        className={styles.closeButton}
+        onClick={onToggleOverlay}
+        title="Close overlay"
+      >
+        <svg width="8" height="15" viewBox="0 0 8 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 13.5801L1 7.58008L7 1.58008" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
       <div className={styles.title}>California State Lobbying Expenditures</div>
       <div className={styles.subtitle}>
         Lobbying expenditures and company connections by bill in the 2025–2026 legislative session</div>
