@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   title: "California Lobbying Expenditures",
   description:
     "Visualization of state legislation lobbying expenditures in California for the 2025-2026 legislative session",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default function RootLayout({

@@ -274,5 +274,40 @@
 @media (max-width: 420px) {
   .overlay {
     max-width: 90svw;
+    /* Ensure overlay maintains its size relative to viewport */
+    width: calc(100vw - 2rem);
+    /* Prevent any unwanted scaling */
+    transform: none;
+    /* Ensure proper positioning on mobile */
+    top: var(--mobile-padding);
+    left: var(--mobile-padding);
+    right: var(--mobile-padding);
+  }
+
+  /* Ensure the toggle button is properly positioned on mobile */
+  .toggleButton {
+    top: var(--mobile-padding);
+    left: var(--mobile-padding);
+  }
+}
+
+/* Additional mobile styles to prevent any zoom-related issues */
+@media (max-width: 768px) {
+  .overlay {
+    /* Use viewport units to ensure consistent sizing */
+    max-width: calc(100vw - 2rem);
+    /* Prevent any transform scaling */
+    transform: none;
+    /* Ensure the overlay is always visible and properly sized */
+    box-sizing: border-box;
+  }
+
+  /* Ensure the visualization container maintains its dimensions */
+  .fullscreen {
+    /* Prevent any unwanted scaling on mobile */
+    transform: none;
+    /* Ensure proper viewport sizing */
+    width: 100vw;
+    height: 100vh;
   }
 }
