@@ -27,7 +27,7 @@
     border: 1px solid var(--light-grey);
     border-radius: var(--medium-rounded);
     padding: var(--standard-padding);
-    max-width: 30rem;
+    max-width: 32rem;
     width: 90%;
     text-align: left;
     box-shadow: var(--large-container-shadow);
@@ -57,7 +57,7 @@
     line-height: 1.2;
     margin-bottom: var(--small-gap);
     list-style-type: disc;
-    padding-left: 0.5rem;
+    padding-left: 1rem;
 }
 
 .loadingInstructions li {
