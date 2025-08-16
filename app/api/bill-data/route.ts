@@ -1,16 +1,6 @@
 import { NextResponse } from "next/server";
-import { Pool } from "pg";
-
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT || "5432"),
-  max: parseInt(process.env.DB_MAX_CLIENTS || "20"),
-  connectionTimeoutMillis: 5000,
-  idleTimeoutMillis: 10000,
-});
+import { pool } from "../../lib/db";
+import { requestQueue } from "../../lib/requestQueue";
 
 export async function GET() {
   try {
@@ -28,7 +18,9 @@ export async function GET() {
                 ORDER BY bill_number
             `;
 
-      const result = await pool.query(query);
+      const result = await requestQueue.add(async () => {
+        return await pool.query(query);
+      });
       const bills = result.rows;
       const error = null;
 
@@ -43,7 +35,12 @@ export async function GET() {
         );
       }
 
-      return NextResponse.json({ bills: bills || [] });
+      const response = NextResponse.json({ bills: bills || [] });
+
+      response.headers.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1200');
+      response.headers.set('Vary', 'Accept-Encoding');
+
+      return response;
     } catch (dbError) {
       console.error("Database query failed:", dbError);
       return NextResponse.json(

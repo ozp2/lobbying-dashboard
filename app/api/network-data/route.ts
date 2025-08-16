@@ -1,31 +1,21 @@
 import { NextResponse } from "next/server";
-
-import { Pool } from "pg";
+import { pool } from "../../lib/db";
+import { requestQueue } from "../../lib/requestQueue";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const minExpenditure = parseFloat(searchParams.get("minExpenditure") || "0");
-  const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: parseInt(process.env.DB_PORT || "5432"),
-    max: parseInt(process.env.DB_MAX_CLIENTS || "20"),
-    connectionTimeoutMillis: 5000,
-    idleTimeoutMillis: 10000,
-  });
 
   try {
-    const [companiesResult, connectionsResult, billsResult] = await Promise.all(
-      [
+    const [companiesResult, connectionsResult, billsResult] = await requestQueue.add(async () => {
+      return await Promise.all([
         pool.query("SELECT * FROM lobbying.companies ORDER BY id"),
         pool.query("SELECT * FROM lobbying.connections ORDER BY company_name"),
         pool.query(
           "SELECT bill_id, bill_number, bill_title, policy_area FROM api.mv_bills ORDER BY bill_number",
         ),
-      ],
-    );
+      ]);
+    });
 
     if (companiesResult.rows.length === 0) {
       return NextResponse.json(
@@ -167,7 +157,12 @@ export async function GET(request: Request) {
       },
     };
 
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+
+    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    response.headers.set('Vary', 'Accept-Encoding');
+
+    return response;
   } catch (error) {
     console.error("Error loading data from Supabase:", error);
     return NextResponse.json(
@@ -180,7 +175,5 @@ export async function GET(request: Request) {
       },
       { status: 500 },
     );
-  } finally {
-    await pool.end();
   }
 }

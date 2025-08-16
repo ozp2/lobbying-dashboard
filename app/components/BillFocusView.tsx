@@ -295,7 +295,6 @@ export default function BillFocusView({
         event.stopPropagation();
         hideTooltip();
         if (d.type === "bill") {
-          // If the bill has a billId and onViewOnVeeto is provided, open Veeto page directly
           if (d.billId && onViewOnVeeto) {
             onViewOnVeeto(d);
           } else {
