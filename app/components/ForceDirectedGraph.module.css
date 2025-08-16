@@ -295,7 +295,6 @@
 @media (max-width: 768px) {
   .overlay {
     /* Use viewport units to ensure consistent sizing */
-    max-width: calc(100vw - 2rem);
     /* Prevent any transform scaling */
     transform: none;
     /* Ensure the overlay is always visible and properly sized */
